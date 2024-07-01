@@ -1,4 +1,5 @@
 import argparse
+import time
 from eth_account import Account
 from eth_account.hdaccount import generate_mnemonic
 import eth_utils
@@ -13,7 +14,7 @@ def generate_vanity_address_with_mnemonic(prefix='', suffix=''):
         account = Account.from_mnemonic(mnemonic)
         address = account.address.lower()
         
-        if address[2:2+len(prefix)] == prefix and address[-len(suffix):] == suffix:
+        if address_matches(address, prefix, suffix):
             return account, mnemonic
 
 def generate_vanity_address_without_mnemonic(prefix='', suffix=''):
@@ -25,8 +26,12 @@ def generate_vanity_address_without_mnemonic(prefix='', suffix=''):
         mnemonic = None
         address = account.address.lower()
         
-        if address[2:2+len(prefix)] == prefix and address[-len(suffix):] == suffix:
+        if address_matches(address, prefix, suffix):
             return account, mnemonic
+
+def address_matches(address, prefix, suffix):
+    return (not prefix or address[2:2+len(prefix)] == prefix) and \
+           (not suffix or address[-len(suffix):] == suffix)
 
 def main():
     parser = argparse.ArgumentParser(description="Generate an Ethereum vanity address.")
@@ -36,15 +41,20 @@ def main():
 
     args = parser.parse_args()
 
+    start_time = time.time()
+
     if args.use_mnemonic:
         vanity_account, mnemonic = generate_vanity_address_with_mnemonic(args.prefix, args.suffix)
     else:
         vanity_account, mnemonic = generate_vanity_address_without_mnemonic(args.prefix, args.suffix)
 
+    elapsed_time = time.time() - start_time
+
     print("Address:", vanity_account.address)
     print("Private Key:", vanity_account.key.hex())
     if mnemonic:
         print("Mnemonic:", mnemonic)
+    print("Time Elapsed: {:.2f} seconds".format(elapsed_time))
 
 if __name__ == "__main__":
     main()
