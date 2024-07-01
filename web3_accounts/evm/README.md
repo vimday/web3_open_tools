@@ -1,6 +1,4 @@
-下面是完整的 `README.md` 文件内容：
 
-```markdown
 # Ethereum Vanity Address Generator
 
 This script generates an Ethereum vanity address based on specified prefix and/or suffix. It also supports generating the address using a mnemonic.
@@ -100,5 +98,4 @@ if __name__ == "__main__":
 
 - Generating a vanity address can take a significant amount of time, especially if the prefix or suffix is long.
 - Be careful with the generated private key and mnemonic. Store them securely.
-```
 
